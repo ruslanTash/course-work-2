@@ -1,10 +1,7 @@
 package Diary;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Objects;
-import java.util.Scanner;
 
 import static java.time.LocalDateTime.now;
 
@@ -13,18 +10,18 @@ public class Task {
     private String title;
     private Type type;
     private int id;
-    private LocalDateTime dateTime;
+    private LocalDate dateTime;
     private String description;
     private Repeatability repeatability;
 
-    public Task(String title, int a, int b, String description) {
+    public Task(String title, int type, int repeat, String description) {
         idGeneration++;
         this.id = idGeneration;
         this.title = title;
-        this.type = Type.getType(a);
+        this.type = Type.getType(type);
         this.description = description;
-        this.dateTime = now();
-        this.repeatability = Repeatability.getRepeatability(b);
+        this.dateTime = LocalDate.now();
+        this.repeatability = Repeatability.getRepeatability(repeat);
     }
 
 
@@ -44,8 +41,12 @@ public class Task {
         return id;
     }
 
-    public LocalDateTime getDateTime() {
+    public LocalDate getDateTime() {
         return dateTime;
+    }
+
+    public void setDate(int day, int month, int year) {
+        this.dateTime = LocalDate.of(year, month, day);
     }
 
     public String getDescription() {
@@ -56,8 +57,23 @@ public class Task {
         this.title = title;
     }
 
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    boolean appearsIn(LocalDate localDate) {
+        if (this.repeatability == Repeatability.DIALY){
+            return true;
+        } else if (this.repeatability == Repeatability.WEEKLY) {
+            return getDateTime().getDayOfWeek() == localDate.getDayOfWeek();
+        } else if (this.repeatability == Repeatability.MONTLY) {
+            return getDateTime().getDayOfMonth() == localDate.getDayOfMonth();
+        } else if (this.repeatability == Repeatability.YEARLY) {
+            return getDateTime().getDayOfYear() == localDate.getDayOfYear();
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -19,3 +19,5 @@ public enum Type {
         else return Type.PERSONAL;
     }
 }
+
+
